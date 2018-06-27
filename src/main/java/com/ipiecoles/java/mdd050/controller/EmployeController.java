@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ipiecoles.java.mdd050.exception.ConflictException;
+import com.ipiecoles.java.mdd050.exception.EmployeException;
 import com.ipiecoles.java.mdd050.model.Employe;
 import com.ipiecoles.java.mdd050.service.EmployeService;
 
@@ -95,4 +96,21 @@ public class EmployeController {
 				throw new IllegalArgumentException("Une erreur technique est survenue");
 			}
 		}
+	 
+	 @RequestMapping (
+			 value = "/{id}",
+			 method = RequestMethod.PUT
+			 )	
+		public Employe updateEmploye(@PathVariable("id") Long id, @RequestBody Employe employe) throws EmployeException {
+				return this.employeService.updateEmploye(id, employe);
+		}
+	 
+	 @RequestMapping (
+			 value = "/{id}",
+			 method = RequestMethod.DELETE
+			 )	
+		public void deleteEmploye(@PathVariable("id") Long id) throws EmployeException {
+				this.employeService.deleteEmploye(id);
+		}
+	
 }

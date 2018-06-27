@@ -64,7 +64,7 @@ public class EmployeController {
 			 method = RequestMethod.GET,
 			 produces = APPLICATION_JSON_CHARSET_UTF_8
 			 )	 
-	 public Page<Employe> afficheListeEmployes(
+	 	public Page<Employe> afficheListeEmployes(
 			 @RequestParam("page") Integer page,
 			 @RequestParam("size") Integer size,
 			 @RequestParam("sortProperty") String sortProperty,

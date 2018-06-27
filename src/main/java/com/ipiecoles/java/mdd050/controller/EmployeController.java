@@ -2,17 +2,22 @@ package com.ipiecoles.java.mdd050.controller;
 
 import java.util.Map;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ipiecoles.java.mdd050.exception.ConflictException;
 import com.ipiecoles.java.mdd050.model.Employe;
 import com.ipiecoles.java.mdd050.service.EmployeService;
 
@@ -72,4 +77,22 @@ public class EmployeController {
 		 Page<Employe> pagin = employeService.findAllEmployes(page, size, sortProperty, sortDirection);
 		 return pagin;
 		 }
+	 
+	 @RequestMapping (
+			 value = "",
+			 method = RequestMethod.POST,
+			 consumes = APPLICATION_JSON_CHARSET_UTF_8,
+			 produces = APPLICATION_JSON_CHARSET_UTF_8
+			 )	
+		public Employe creerEmploye(@RequestBody Employe employe) throws ConflictException {
+			try {
+				return this.employeService.creerEmploye(employe);
+			}
+			catch (DataIntegrityViolationException e) {	
+				if (e.getMessage().contains("matricule_unique")) {
+				throw new ConflictException("L'employe de matricule " + employe.getMatricule() + " existe déjà!");
+				}
+				throw new IllegalArgumentException("Une erreur technique est survenue");
+			}
+		}
 }

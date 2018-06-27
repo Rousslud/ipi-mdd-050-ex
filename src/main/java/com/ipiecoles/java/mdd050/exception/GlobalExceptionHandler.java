@@ -1,5 +1,6 @@
 package com.ipiecoles.java.mdd050.exception;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.data.mapping.PropertyReferenceException;
@@ -36,6 +37,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 	  public String handlePropertyReferencetException(
 			  PropertyReferenceException e) {
 	      return "La propriété " + e.getPropertyName() + " n'existe pas !";
+	  }
+	  
+	  @ExceptionHandler(ConflictException.class)
+	  @ResponseStatus(HttpStatus.CONFLICT)
+	  public String handleConflictException(
+	    ConflictException e) {
+	      return e.getMessage();
 	  }
 	}
 

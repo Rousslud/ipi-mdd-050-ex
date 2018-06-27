@@ -5,15 +5,13 @@ import java.util.Map;
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.ipiecoles.java.mdd050.model.Employe;
 import com.ipiecoles.java.mdd050.service.EmployeService;
@@ -49,11 +47,29 @@ public class EmployeController {
 	 @RequestMapping (
 			 value = "",
 			 method = RequestMethod.GET,
+			 produces = APPLICATION_JSON_CHARSET_UTF_8, 
 			 params="matricule"
 			 )	 
-	 public Employe rechercheMatricule(@RequestParam("matricule") String matricule, Map<String,Object> model) {
-		 return employeService.findMyMatricule(matricule);
+	 	public Employe rechercheMatricule(@RequestParam("matricule") String matricule) {
+		Employe employe = employeService.findMyMatricule(matricule);	
+		 if (employe == null ) {
+				throw new EntityNotFoundException("L'employé de matricule : " + 
+						matricule + " n'a pas été trouvé.");
+			}
+		 return employe;
 		}
 	 
-
+	 @RequestMapping (
+			 value = "",
+			 method = RequestMethod.GET,
+			 produces = APPLICATION_JSON_CHARSET_UTF_8
+			 )	 
+	 public Page<Employe> afficheListeEmployes(
+			 @RequestParam("page") Integer page,
+			 @RequestParam("size") Integer size,
+			 @RequestParam("sortProperty") String sortProperty,
+			 @RequestParam("sortDirection") String sortDirection) {
+		 Page<Employe> pagin = employeService.findAllEmployes(page, size, sortProperty, sortDirection);
+		 return pagin;
+		 }
 }

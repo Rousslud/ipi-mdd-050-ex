@@ -3,6 +3,9 @@ package com.ipiecoles.java.mdd050.service;
 import com.ipiecoles.java.mdd050.exception.EmployeException;
 import com.ipiecoles.java.mdd050.model.Employe;
 import com.ipiecoles.java.mdd050.repository.EmployeRepository;
+
+import javax.persistence.EntityNotFoundException;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -51,7 +54,10 @@ public class EmployeService {
     }
 
     public <T extends Employe> T updateEmploye(Long id, T employe) throws EmployeException {
-        return employeRepository.save(employe);
+        if(!employeRepository.exists(id)) {
+        	throw new EntityNotFoundException("L'employé d'identifiant " + id + " n'existe pas !");
+        }
+    	return employeRepository.save(employe);
     }
 
     public Page<Employe> findAllEmployes(Integer page, Integer size, String sortProperty, String sortDirection) {

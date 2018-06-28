@@ -26,6 +26,10 @@ public class ManagerService {
         if(t == null){
             throw new EntityNotFoundException("");
         }
+        
+        if (m.equals(t.getManager())) {
+        	throw new IllegalArgumentException("Le technicien " + t.getId() + " n'a pas pour manager le manager " + m.getId());
+        }
 
         m.getEquipe().remove(t);
         managerRepository.save(m);

@@ -15,8 +15,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(EntityNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public String handleEntityNotFoundException(EntityNotFoundException entityNotFoundException) {
-		return entityNotFoundException.getMessage();
+	public String handleEntityNotFoundException(EntityNotFoundException e) {
+		return e.getMessage();
 	}
 
 	@ExceptionHandler(IllegalArgumentException.class)
